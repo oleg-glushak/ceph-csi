@@ -9,11 +9,11 @@ metadata:
 {{ toYaml .annotations | indent 4 }}
 {{- end }}
   labels:
-    app: {{ include "ceph-csi-rbd.name" . }}
-    chart: {{ include "ceph-csi-rbd.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-provisioner: {{ .Values.driverName }}
+    app: {{ include "ceph-csi-rbd.name" $ }}
+    chart: {{ include "ceph-csi-rbd.chart" $ }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+provisioner: {{ $.Values.driverName }}
 parameters:
   clusterID: {{ .clusterID }}
   pool: {{ .pool }}
@@ -56,19 +56,19 @@ parameters:
 {{- if .provisionerSecretNamespace }}
   csi.storage.k8s.io/provisioner-secret-namespace: {{ .provisionerSecretNamespace }}
 {{ else }}
-  csi.storage.k8s.io/provisioner-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/provisioner-secret-namespace: {{ $.Release.Namespace }}
 {{- end }}
   csi.storage.k8s.io/controller-expand-secret-name: {{ .controllerExpandSecret }}
-{{- if .Values.storageClass.controllerExpandSecretNamespace }}
+{{- if .controllerExpandSecretNamespace }}
   csi.storage.k8s.io/controller-expand-secret-namespace: {{ .controllerExpandSecretNamespace }}
 {{ else }}
-  csi.storage.k8s.io/controller-expand-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/controller-expand-secret-namespace: {{ $.Release.Namespace }}
 {{- end }}
   csi.storage.k8s.io/node-stage-secret-name: {{ .nodeStageSecret }}
 {{- if .nodeStageSecretNamespace }}
   csi.storage.k8s.io/node-stage-secret-namespace: {{ .nodeStageSecretNamespace }}
 {{ else }}
-  csi.storage.k8s.io/node-stage-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-stage-secret-namespace: {{ $.Release.Namespace }}
 {{- end }}
   csi.storage.k8s.io/fstype: {{ .fstype }}
 reclaimPolicy: {{ .reclaimPolicy }}
